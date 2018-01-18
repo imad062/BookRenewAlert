@@ -35,39 +35,71 @@ public class MainActivity extends AppCompatActivity {
         {
             case R.id.button_addBook_menu:
 
-                AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
-                TextView titleText = (TextView) new TextView(getApplicationContext());
-                titleText.setText("Add Book and Renew Date");
-                titleText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                titleText.setGravity(Gravity.CENTER);
-                titleText.setPadding(10,10,10,10);
-                titleText.setTypeface(null, Typeface.BOLD);
-
-                alert.setCustomTitle(titleText)
-                        .setView(R.layout.alertdialog_view)
-                        .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(getApplicationContext(), "ADDED", Toast.LENGTH_LONG).show();
-                            }
-                        })
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(getApplicationContext(), "CANCELLED", Toast.LENGTH_LONG).show();
-                                finish();
-                            }
-                        });
-
-                AlertDialog alertDialog = alert.create();
-                Log.d("BeforShow", "HEREEEE");
-                alertDialog.show();
+                clickedOnAddBookMenuItem();
 
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void clickedOnAddBookMenuItem()
+    {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        TextView titleText = (TextView) new TextView(getApplicationContext());
+        titleText.setText("Add Book and Renew Date");
+        titleText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        titleText.setGravity(Gravity.CENTER);
+        titleText.setPadding(10,10,10,10);
+        titleText.setTypeface(null, Typeface.BOLD);
+
+        alert.setCustomTitle(titleText)
+                .setView(R.layout.alertdialog_view)
+                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), "ADDED", Toast.LENGTH_LONG).show();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplicationContext(), "CANCELLED", Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+                });
+
+        AlertDialog alertDialog = alert.create();
+        Log.d("BeforShow", "HEREEEE");
+        alertDialog.show();
+    }
+
+    public void clickedOnRenewedBookListviewItem()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        TextView textView = new TextView(getApplicationContext());
+        textView.setText("Have You renewed the Book?");
+        textView.setPadding(10,10,10,10);
+        textView.setGravity(Gravity.CENTER);
+        textView.setTypeface(null, Typeface.BOLD);
+        textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+        builder.setCustomTitle(textView)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).create().show();
+
     }
 
 }

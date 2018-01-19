@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         showCurrentDate();
-        getCurrentDate();
+
         database = new DatabaseHelper(this);
     }
 

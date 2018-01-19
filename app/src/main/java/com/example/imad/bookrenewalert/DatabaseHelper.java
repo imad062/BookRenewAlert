@@ -23,12 +23,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(" CREATE TABLE " + databaseTableName + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + "NAME TEXT, " + "ISSUEDATE TEXT, " + "RENEWDATE TEXT )");
+        db.execSQL("CREATE TABLE " + databaseTableName + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + "NAME TEXT, " + "ISSUEDATE TEXT, " + "RENEWDATE TEXT )");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(" DROP TABLE IF EXISTS " + databaseTableName);
+        db.execSQL("DROP TABLE IF EXISTS " + databaseTableName);
     }
 
     public boolean insertData(String bookName, String issueDate, String renewDate)

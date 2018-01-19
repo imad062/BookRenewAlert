@@ -7,17 +7,17 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 
-public class DatabaseHelper extends SQLiteOpenHelper {
+class DatabaseHelper extends SQLiteOpenHelper {
 
-    static final String databaseName = "BookRenewAlert";
-    static final String databaseTableName = "Books";
-    static final String databaseColOne = "id";
-    static final String databaseColTwo = "name";
-    static final String databaseColThree = "issueDate";
-    static final String databaseColFour = "renewDate";
+    private static final String databaseName = "BookRenewAlert";
+    private static final String databaseTableName = "Books";
+    private static final String databaseColOne = "id";
+    private static final String databaseColTwo = "name";
+    private static final String databaseColThree = "issueDate";
+    private static final String databaseColFour = "renewDate";
 
 
-    public DatabaseHelper(Context context) {
+    DatabaseHelper(Context context) {
         super(context, databaseName, null, 1);
     }
 
@@ -31,7 +31,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + databaseTableName);
     }
 
-    public boolean insertData(String bookName, String issueDate, String renewDate)
+    boolean insertData(String bookName, String issueDate, String renewDate)
     {
         long result;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -43,14 +43,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         result = db.insert(databaseTableName, null, contentValues);
 
-        if(result == -1)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        return result != -1;
 
     }
 

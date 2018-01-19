@@ -1,7 +1,6 @@
 package com.example.imad.bookrenewalert;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
@@ -12,17 +11,13 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
-import java.time.Year;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -64,11 +59,9 @@ public class MainActivity extends AppCompatActivity {
     public void clickedOnAddBookMenuItem()
     {
 
-        final String renewDate;
-
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
-        TextView titleText = (TextView) new TextView(getApplicationContext());
+        TextView titleText = new TextView(getApplicationContext());
         titleText.setText("Add Book and Renew Date");
         titleText.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         titleText.setGravity(Gravity.CENTER);
@@ -83,8 +76,8 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Added", Toast.LENGTH_LONG).show();
 
                         Dialog dialog1 = (Dialog) dialog;
-                        TextView setDate = (TextView) dialog1.findViewById(R.id.txt_currentDate_alertdialog);
-                        EditText bookname = (EditText) dialog1.findViewById(R.id.edit_bookname_alertdialog);
+                        TextView setDate = dialog1.findViewById(R.id.txt_currentDate_alertdialog);
+                        EditText bookname = dialog1.findViewById(R.id.edit_bookname_alertdialog);
 
                         String bookName = bookname.getText().toString();
                         String issueDate = getCurrentDate();
@@ -106,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
 
                         Dialog dialog1 = (Dialog) dialog;
-                        EditText bookname = (EditText) dialog1.findViewById(R.id.edit_bookname_alertdialog);
+                        EditText bookname = dialog1.findViewById(R.id.edit_bookname_alertdialog);
 
 
                         Toast.makeText(getApplicationContext(), "Default Selceted", Toast.LENGTH_SHORT).show();
@@ -117,8 +110,8 @@ public class MainActivity extends AppCompatActivity {
         final AlertDialog alertDialog = alert.create();
         alertDialog.show();
 
-        final TextView currentDateSet = (TextView) alertDialog.findViewById(R.id.txt_currentDate_alertdialog);
-        final DatePicker datePicker = (DatePicker) alertDialog.findViewById(R.id.datePicker_alertdialog);
+        final TextView currentDateSet = alertDialog.findViewById(R.id.txt_currentDate_alertdialog);
+        final DatePicker datePicker = alertDialog.findViewById(R.id.datePicker_alertdialog);
 
         final Calendar calendar = Calendar.getInstance();
         final int year = calendar.get(Calendar.YEAR);
@@ -129,18 +122,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 
-                Calendar calendar1 = new GregorianCalendar(year, monthOfYear, dayOfMonth);
-
-                String nameOfDay = null;
-                String nameOfMonth = null;
-
-                int day = ( calendar1.get(Calendar.DAY_OF_WEEK) );
-                nameOfDay = getDayFromInput(day);
-
                 int month = monthOfYear+1;
-                nameOfMonth = getMonthFromInput(month);
-
-
                 currentDateSet.setText("" + dayOfMonth + "-" + month + "-" + year);
 
             }
@@ -218,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
         curDate = longDay + ", " + longDate + " " + longMonth + " " + longYear;
 
         TextView txtShowCurDate = (TextView) findViewById(R.id.textView2);
-        txtShowCurDate.setText(curDate.toString());
+        txtShowCurDate.setText(curDate);
     }
 
     public String getDayFromInput(int day)

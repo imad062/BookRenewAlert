@@ -15,6 +15,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
     private static final String databaseColTwo = "name";
     private static final String databaseColThree = "issueDate";
     private static final String databaseColFour = "renewDate";
+    private static final String databaseColFive = "lastRenewed";
 
 
     DatabaseHelper(Context context) {
@@ -23,7 +24,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + databaseTableName + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + "NAME TEXT, " + "ISSUEDATE TEXT, " + "RENEWDATE TEXT )");
+        db.execSQL("CREATE TABLE " + databaseTableName + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + "NAME TEXT, " + "ISSUEDATE TEXT, " + "RENEWDATE TEXT, " + "LASTRENEWED TEXT )");
     }
 
     @Override
@@ -40,7 +41,7 @@ class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(databaseColTwo, bookName);
         contentValues.put(databaseColThree, issueDate);
         contentValues.put(databaseColFour, renewDate);
-
+        contentValues.put(databaseColFive, "1");
         result = db.insert(databaseTableName, null, contentValues);
 
         return result != -1;

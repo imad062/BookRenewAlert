@@ -15,7 +15,6 @@
         android:text="Help"
         android:background="@android:color/holo_green_light"
         android:textAllCaps="false"
-        android:onClick="clickedDelete"
         />
 
     <TextView

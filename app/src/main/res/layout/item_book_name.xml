@@ -31,6 +31,7 @@
         android:layout_alignParentEnd="true"
         android:textAllCaps="false"
         android:background="@android:color/holo_green_light"
+        android:onClick="clickedRenew"
         />
 
     <Button
@@ -42,5 +43,6 @@
         android:background="@android:color/holo_red_dark"
         android:text="Delete"
         android:textAllCaps="false"
+        android:onClick="clickedDelete"
         />
 </RelativeLayout>

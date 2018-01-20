@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter<String> arrayAdapter;
 
     ListView listView;
-    Button deleteBook, renewBook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,45 +41,6 @@ public class MainActivity extends AppCompatActivity {
 
         database = new DatabaseHelper(this);
         listView = (ListView) findViewById(R.id.listview);
-
-        //TODO:Bug on onClickListener for delete in ListView item
-        deleteBook = (Button) findViewById(R.id.btn_delete_book);
-        deleteBook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("LetMeDelete", "here");
-                final View view1 = v;
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
-
-                TextView textView = new TextView(getApplicationContext());
-                textView.setText("Have You retured the book?");
-                textView.setPadding(10,10,10,10);
-                textView.setGravity(Gravity.CENTER);
-                textView.setTypeface(null, Typeface.BOLD);
-                textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                textView.setTextColor(Color.RED);
-
-                builder.setCustomTitle(textView)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                View parent = (View) view1.getParent();
-                                TextView bookname = (TextView) parent.findViewById(R.id.txt_bookname_listview);
-                                String bookName = bookname.getText().toString();
-                                database.deleteData(bookName);
-                                updateListView(database.getAllData());
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        }).create().show();
-            }
-        });
-
 
         showCurrentDate();
         updateListView(database.getAllData());
@@ -189,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //TODO: Renew has to do automatic renew,meaning it has to find the (renew-issue) and add it to renew,update last renewed
     //click listener for book renewed button
     public void clickedRenew(View view)
     {
@@ -366,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if(arrayAdapter == null)
         {
-            arrayAdapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.item_book_name,R.id.txt_bookname_listview, arrayList);
+            arrayAdapter = new ArrayAdapter<String>(MainActivity.this,R.layout.item_book_name,R.id.txt_bookname_listview, arrayList);
             listView.setAdapter(arrayAdapter);
         }
         else
@@ -374,7 +335,7 @@ public class MainActivity extends AppCompatActivity {
             arrayAdapter.clear();
             arrayAdapter.addAll();
             arrayAdapter.notifyDataSetChanged();
-            arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_book_name, R.id.txt_bookname_listview, arrayList);
+            arrayAdapter = new ArrayAdapter<String>(MainActivity.this, R.layout.item_book_name, R.id.txt_bookname_listview, arrayList);
             listView.setAdapter(arrayAdapter);
         }
 

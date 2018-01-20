@@ -49,9 +49,16 @@ class DatabaseHelper extends SQLiteOpenHelper {
 
     public Cursor getAllData()
     {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor data = db.rawQuery(" SELECT * FROM " + databaseTableName, null);
+        return data;
+    }
+
+    public void deleteData(String bookName)
+    {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Cursor data = db.rawQuery(" GET * FROM " + databaseTableName, null);
-        return data;
+        db.delete(databaseTableName, " name = ? ", new String[]{bookName});
     }
 }

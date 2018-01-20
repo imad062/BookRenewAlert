@@ -3,6 +3,8 @@ package com.example.imad.bookrenewalert;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,27 +13,78 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
     DatabaseHelper database;
+    ArrayAdapter<String> arrayAdapter;
+
+    ListView listView;
+    Button deleteBook, renewBook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        showCurrentDate();
-
         database = new DatabaseHelper(this);
+        listView = (ListView) findViewById(R.id.listview);
+
+        //TODO:Bug on onClickListener for delete in ListView item
+        deleteBook = (Button) findViewById(R.id.btn_delete_book);
+        deleteBook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("LetMeDelete", "here");
+                final View view1 = v;
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
+
+                TextView textView = new TextView(getApplicationContext());
+                textView.setText("Have You retured the book?");
+                textView.setPadding(10,10,10,10);
+                textView.setGravity(Gravity.CENTER);
+                textView.setTypeface(null, Typeface.BOLD);
+                textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                textView.setTextColor(Color.RED);
+
+                builder.setCustomTitle(textView)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                View parent = (View) view1.getParent();
+                                TextView bookname = (TextView) parent.findViewById(R.id.txt_bookname_listview);
+                                String bookName = bookname.getText().toString();
+                                database.deleteData(bookName);
+                                updateListView(database.getAllData());
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        }).create().show();
+            }
+        });
+
+
+        showCurrentDate();
+        updateListView(database.getAllData());
+
     }
 
     @Override
@@ -56,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Add book in the database
     public void clickedOnAddBookMenuItem()
     {
 
@@ -85,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
 
                         Log.d("AlertOnClick", "Bookname = " + bookName + " issueDate = " + issueDate + " renewdate = " + renewDate);
                         database.insertData(bookName, issueDate, renewDate);
+                        updateListView(database.getAllData());
 
                     }
                 })
@@ -110,15 +165,20 @@ public class MainActivity extends AppCompatActivity {
         final AlertDialog alertDialog = alert.create();
         alertDialog.show();
 
+        //Get the textview and datepicker inside the alertdialog
         final TextView currentDateSet = alertDialog.findViewById(R.id.txt_currentDate_alertdialog);
         final DatePicker datePicker = alertDialog.findViewById(R.id.datePicker_alertdialog);
 
+        //get current date to initialize the datepicker
         final Calendar calendar = Calendar.getInstance();
         final int year = calendar.get(Calendar.YEAR);
         final int dmonth = calendar.get(Calendar.DAY_OF_MONTH);
         final int month = calendar.get(Calendar.MONTH);
 
+        //datepicker initializer
         datePicker.init(year, month, dmonth, new DatePicker.OnDateChangedListener() {
+
+            //set the textview on the current set date
             @Override
             public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 
@@ -127,11 +187,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
 
-    public void clickedOnRenewedBookListviewItem()
+    //click listener for book renewed button
+    public void clickedRenew(View view)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -158,6 +217,41 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void clickedDelete(View view)
+    {
+        Log.d("LetMeDelete", "here");
+        final View view1 = view;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        TextView textView = new TextView(getApplicationContext());
+        textView.setText("Have You retured the book?");
+        textView.setPadding(10,10,10,10);
+        textView.setGravity(Gravity.CENTER);
+        textView.setTypeface(null, Typeface.BOLD);
+        textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        textView.setTextColor(Color.RED);
+
+        builder.setCustomTitle(textView)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        View parent = (View) view1.getParent();
+                        TextView bookname = (TextView) parent.findViewById(R.id.txt_bookname_listview);
+                        String bookName = bookname.getText().toString();
+                        database.deleteData(bookName);
+                        updateListView(database.getAllData());
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).create().show();
+    }
+
+    //gets current date in String form
     public String getCurrentDate()
     {
         int curDate;
@@ -169,6 +263,7 @@ public class MainActivity extends AppCompatActivity {
         curMonth = calendar.get(Calendar.MONTH);
         curYear = calendar.get(Calendar.YEAR);
 
+        //month is 0 indexed in calendar class
         int month = curMonth + 1;
 
         String string = "" + curDate + "-" + month + "-" + curYear;
@@ -178,6 +273,7 @@ public class MainActivity extends AppCompatActivity {
         return string;
     }
 
+    //shows current date with name of day and name of month in mainactivity
     public void showCurrentDate()
     {
         String curDate;
@@ -203,6 +299,7 @@ public class MainActivity extends AppCompatActivity {
         txtShowCurDate.setText(curDate);
     }
 
+    //get name of day from given input number of day
     public String getDayFromInput(int day)
     {
         String nameOfDay = null;
@@ -225,6 +322,7 @@ public class MainActivity extends AppCompatActivity {
         return nameOfDay;
     }
 
+    //get name of month from given number of month
     public String getMonthFromInput(int month)
     {
         String nameOfMonth = null;
@@ -255,6 +353,33 @@ public class MainActivity extends AppCompatActivity {
             nameOfMonth = "December";
 
         return nameOfMonth;
+    }
+
+    //updates listview in mainactivity
+    public void updateListView(Cursor data)
+    {
+        ArrayList<String> arrayList = new ArrayList<>();
+
+        while (data.moveToNext())
+        {
+            arrayList.add(data.getString(1));
+        }
+        if(arrayAdapter == null)
+        {
+            arrayAdapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.item_book_name,R.id.txt_bookname_listview, arrayList);
+            listView.setAdapter(arrayAdapter);
+        }
+        else
+        {
+            arrayAdapter.clear();
+            arrayAdapter.addAll();
+            arrayAdapter.notifyDataSetChanged();
+            arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.item_book_name, R.id.txt_bookname_listview, arrayList);
+            listView.setAdapter(arrayAdapter);
+        }
+
+        data.close();
+        database.close();
     }
 
 }

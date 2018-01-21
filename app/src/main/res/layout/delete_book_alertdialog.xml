@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/bookname_deleteBook_alertDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bookname"
+        android:gravity="center"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/button3" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Added-On"
+        android:layout_below="@+id/bookname_deleteBook_alertDialog"
+        android:layout_alignParentStart="true"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:layout_alignEnd="@+id/button4" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/button3"
+        android:text="Last-Renewed"
+        android:textAllCaps="false"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/txt_addedOn_delete_alertdialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="book added on"
+        android:layout_above="@+id/button4"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/button3"
+        android:layout_alignTop="@+id/button3"
+        android:gravity="center"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/txt_lastRenewed_delete_alertdialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_addedOn_delete_alertdialog"
+        android:text="last renewed on"
+        android:layout_alignBottom="@+id/button4"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/button3"
+        android:gravity="center"
+        android:textStyle="bold"
+        />
+
+    <Button
+        android:id="@+id/button5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="Book-Name"
+        android:textAllCaps="false"
+        android:textStyle="bold"
+        android:layout_toStartOf="@+id/bookname_deleteBook_alertDialog" />
+
+</RelativeLayout>

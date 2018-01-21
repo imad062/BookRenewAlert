@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <Button
+        android:id="@+id/button7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="Book-Name"
+        android:layout_alignEnd="@+id/button8"
+        android:textAllCaps="false"
+        android:textStyle="bold"/>
+
+    <Button
+        android:id="@+id/button8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/button7"
+        android:text="Added-On"
+        android:layout_alignEnd="@+id/button9"
+        android:textAllCaps="false"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/button9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Last-Renewed"
+        android:layout_below="@+id/button8"
+        android:layout_alignParentStart="true"
+        android:textAllCaps="false"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/txt_bookname_renew_alertdialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="BookName"
+        android:layout_above="@+id/button8"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/button7"
+        android:gravity="center"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/txt_addedOn_renew_alertdialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_bookname_renew_alertdialog"
+        android:text="TextView"
+        android:layout_above="@+id/button9"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/button7"
+        android:gravity="center"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/txt_lastRenewed_renew_alertdialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_addedOn_renew_alertdialog"
+        android:text="TextView"
+        android:layout_alignBottom="@+id/button9"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/button8"
+        android:gravity="center"
+        android:textStyle="bold"/>
+</RelativeLayout>

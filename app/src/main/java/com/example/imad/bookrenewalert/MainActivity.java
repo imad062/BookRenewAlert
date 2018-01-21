@@ -22,6 +22,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     DatabaseHelper database;
     ArrayAdapter<String> arrayAdapter;
+    int currDate,currMonth,currYear, setDate, setMonth,setYear;
 
     ListView listView;
 
@@ -97,9 +101,14 @@ public class MainActivity extends AppCompatActivity {
                         String issueDate = getCurrentDate();
                         String renewDate = setDate.getText().toString();
 
-                        Log.d("AlertOnClick", "Bookname = " + bookName + " issueDate = " + issueDate + " renewdate = " + renewDate);
+                        DateTime start = new DateTime(currYear, currMonth+1, currDate, 0, 0, 0);
+                        DateTime end = new DateTime(setYear,setMonth+1,currDate, 0,0,0);
+                        String difference = Days.daysBetween(start,end).toString();
+
+                        Log.d("AlertOnClick", "Bookname = " + bookName + " issueDate = " + issueDate + " renewdate = " + renewDate + " difference = " + difference);
                         database.insertData(bookName, issueDate, renewDate);
                         updateListView(database.getAllData());
+
 
                     }
                 })
@@ -142,6 +151,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 
+                setDate = dayOfMonth;
+                setYear = year;
+                setMonth = monthOfYear;
+
                 int month = monthOfYear+1;
                 currentDateSet.setText("" + dayOfMonth + "-" + month + "-" + year);
 
@@ -161,11 +174,20 @@ public class MainActivity extends AppCompatActivity {
         textView.setGravity(Gravity.CENTER);
         textView.setTypeface(null, Typeface.BOLD);
         textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        textView.setTextColor(Color.rgb(0,153,51));
 
+        //TODO: show the bookname, added on, last renewed in a CustomView
         builder.setCustomTitle(textView)
+                .setView(R.layout.renew_book_alertdialog)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
+                        //TODO: have to get current date in string format (Hint: getCurrentDate() )
+
+                        //TODO: add difference with current date to get next renew date (diff is in database)
+
+                        //TODO: update the last Renew date with todays date
 
                     }
                 })
@@ -176,11 +198,12 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }).create().show();
 
+
     }
 
+    //delete book from database on button delete
     public void clickedDelete(View view)
     {
-        Log.d("LetMeDelete", "here");
         final View view1 = view;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -194,14 +217,17 @@ public class MainActivity extends AppCompatActivity {
         textView.setTextColor(Color.RED);
 
         builder.setCustomTitle(textView)
+                .setView(R.layout.delete_book_alertdialog)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
                         View parent = (View) view1.getParent();
                         TextView bookname = (TextView) parent.findViewById(R.id.txt_bookname_listview);
                         String bookName = bookname.getText().toString();
                         database.deleteData(bookName);
                         updateListView(database.getAllData());
+
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -209,7 +235,38 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
 
                     }
-                }).create().show();
+                });
+
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+        //showing the bookname and addedOn and renewedOn in the alertdialog
+        final TextView book = alertDialog.findViewById(R.id.bookname_deleteBook_alertDialog);
+        final TextView addedOn = alertDialog.findViewById(R.id.txt_addedOn_delete_alertdialog);
+        final TextView renewedOn = alertDialog.findViewById(R.id.txt_lastRenewed_delete_alertdialog);
+
+        //TODO: give warning in help to not give duplicate booknames
+        View parent = (View) view1.getParent();
+        final TextView bookName = (TextView) parent.findViewById(R.id.txt_bookname_listview);
+        String bookname = bookName.getText().toString();
+
+        //As i dont no SQL, i have to use brute force
+        Cursor data = database.getAllData();
+        while (data.moveToNext())
+        {
+            if(data.getString(1).equals(bookname))
+            {
+                book.setText(bookname);
+                addedOn.setText(data.getString(2));
+                renewedOn.setText(data.getString(3));
+                Log.d("deleteBook", "name = " + bookname + " added = " + data.getString(2) + " renewed = " + data.getString(3));
+                break;
+            }
+        }
+
+        //addedOn.setText(data.getString(2));
+        //renewedOn.setText(data.getString(3));
+
     }
 
     //gets current date in String form
@@ -223,6 +280,11 @@ public class MainActivity extends AppCompatActivity {
         curDate = calendar.get(Calendar.DAY_OF_MONTH);
         curMonth = calendar.get(Calendar.MONTH);
         curYear = calendar.get(Calendar.YEAR);
+
+        //setting the global variables for use in difference in database
+        currDate = curDate;
+        currMonth = curMonth;
+        currYear = curYear;
 
         //month is 0 indexed in calendar class
         int month = curMonth + 1;

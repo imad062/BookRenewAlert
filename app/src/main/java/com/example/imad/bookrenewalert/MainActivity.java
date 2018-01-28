@@ -34,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
     DatabaseHelper database;
     ArrayAdapter<String> arrayAdapter;
-    int currDate,currMonth,currYear, setDate, setMonth,setYear;
+    int currDate,currMonth,currYear, setDatee, setMonth,setYear;
+    DateTime today;
 
     ListView listView;
 
@@ -101,12 +102,13 @@ public class MainActivity extends AppCompatActivity {
                         String issueDate = getCurrentDate();
                         String renewDate = setDate.getText().toString();
 
-                        DateTime start = new DateTime(currYear, currMonth+1, currDate, 0, 0, 0);
-                        DateTime end = new DateTime(setYear,setMonth+1,currDate, 0,0,0);
+                        DateTime start = new DateTime(currYear, currMonth, currDate, 0, 0, 0);
+                        DateTime end = new DateTime(setYear, setMonth, setDatee, 0, 0, 0);
                         String difference = Days.daysBetween(start,end).toString();
+                        today = start;
 
                         Log.d("AlertOnClick", "Bookname = " + bookName + " issueDate = " + issueDate + " renewdate = " + renewDate + " difference = " + difference);
-                        database.insertData(bookName, issueDate, renewDate);
+                        database.insertData(bookName, issueDate, renewDate, difference);
                         updateListView(database.getAllData());
 
 
@@ -151,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 
-                setDate = dayOfMonth;
+                setDatee = dayOfMonth;
                 setYear = year;
                 setMonth = monthOfYear;
 
@@ -166,6 +168,8 @@ public class MainActivity extends AppCompatActivity {
     //click listener for book renewed button
     public void clickedRenew(View view)
     {
+        final View view1 = (View) view;
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         TextView textView = new TextView(getApplicationContext());
@@ -176,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
         textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         textView.setTextColor(Color.rgb(0,153,51));
 
-        //TODO: show the bookname, added on, last renewed in a CustomView
+        //TODO: show the bookname, added on, last renewed, nextRenew in a CustomView
         builder.setCustomTitle(textView)
                 .setView(R.layout.renew_book_alertdialog)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -196,7 +200,33 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
 
                     }
-                }).create().show();
+                });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+        final TextView book = alertDialog.findViewById(R.id.txt_bookname_renew_alertdialog);
+        final TextView addedOn = alertDialog.findViewById(R.id.txt_addedOn_renew_alertdialog);
+        final TextView renewedOn = alertDialog.findViewById(R.id.txt_lastRenewed_renew_alertdialog);
+
+        //TODO: give warning in help to not give duplicate booknames
+        View parent = (View) view1.getParent();
+        final TextView bookName = (TextView) parent.findViewById(R.id.txt_bookname_listview);
+        String bookname = bookName.getText().toString();
+
+        //As i dont no SQL, i have to use brute force
+        Cursor data = database.getAllData();
+        while (data.moveToNext())
+        {
+            if(data.getString(1).equals(bookname))
+            {
+                book.setText(bookname);
+                addedOn.setText(data.getString(2));
+                renewedOn.setText(data.getString(3));
+                Log.d("renewBook", "name = " + bookname + " added = " + data.getString(2) + " renewed = " + data.getString(3));
+                break;
+            }
+        }
 
 
     }
@@ -246,6 +276,7 @@ public class MainActivity extends AppCompatActivity {
         final TextView renewedOn = alertDialog.findViewById(R.id.txt_lastRenewed_delete_alertdialog);
 
         //TODO: give warning in help to not give duplicate booknames
+        //TODO: Also show next renewdate
         View parent = (View) view1.getParent();
         final TextView bookName = (TextView) parent.findViewById(R.id.txt_bookname_listview);
         String bookname = bookName.getText().toString();
@@ -263,10 +294,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
         }
-
-        //addedOn.setText(data.getString(2));
-        //renewedOn.setText(data.getString(3));
-
     }
 
     //gets current date in String form
